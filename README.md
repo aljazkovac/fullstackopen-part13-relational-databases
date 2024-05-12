@@ -1,1 +1,1 @@
-# fullstackopen-relationa-db
+# fullstackopen-relational-db
