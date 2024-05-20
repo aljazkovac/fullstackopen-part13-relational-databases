@@ -6,10 +6,11 @@ services:
     restart: always
     env_file:
       - .env
-    # set shared memory limit when using docker-compose
+    # Set shared memory limit when using docker-compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
     volumes:
+      - db_data:/var/lib/postgresql/data # Persist PostgreSQL data to a named volume
+      # In-memory file system. Useful for fast storage of temporary files or shared memory.
       - type: tmpfs
         target: /dev/shm
         tmpfs:
@@ -17,9 +18,13 @@ services:
     ports:
       - 5432:5432 # The default port for Postgres.
 
-# Provides a web interface for database management.
+  # Provides a web interface for database management.
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
+volumes:
+  db_data:
+    driver: local
