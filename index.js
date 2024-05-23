@@ -13,6 +13,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
     } : {},
 });
 
+// *** NOTES ***
 class Note extends Model {}
 Note.init({
     id: {
@@ -37,10 +38,13 @@ Note.init({
     modelName: 'note'
 })
 
+// Creates the table if it doesn't exist.
+Note.sync()
+
 app.get('/api/notes', async(req, res) => {
     try {
         const notes = await Note.findAll()
-        res.json(notes)
+        return res.json(notes)
     }
     catch (error) {
         console.error(error)
@@ -58,15 +62,118 @@ app.post('/api/notes', async (req, res) => {
     }
 })
 
+// *** BLOGS ***
+class Blog extends Model {}
+Blog.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    author: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    url: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    title: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    likes: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        default: 0
+    }
+}, {
+    sequelize,
+    underscored: true,
+    timestamps: false,
+    modelName: 'blog'
+})
+
+// Creates the table if it doesn't exist.
+Blog.sync()
+
 app.get('/api/blogs', async(req, res) => {
     try {
-        const blogs = await sequelize.query("SELECT * FROM blogs", { type: QueryTypes.SELECT })
-        res.json(blogs)
-        blogs.forEach(b => console.log(`${b.author}: '${b.title}', ${b.likes} likes`))
+        const blogs = await Blog.findAll()
+        console.log(JSON.stringify(blogs), null, 2)
+        return res.json(blogs)
+        
+    } catch(error) {
+        return res.status(500).json({ error: 'Internal server error.' })
+    }
+})
+
+app.get('/api/blogs/:id', async(req, res) => {
+    try {
+        const blog = await Blog.findByPk(req.params.id)
+        if (blog) {
+            console.log(blog.toJSON())
+            return res.json(blog)
+        }
+        else {
+           res.status(404).json({ message: 'Blog not found.' })
+        }
     }
     catch (error) {
         console.error(error)
         res.status(500).json({ error: 'Internal server error.' })
+    }
+})
+
+app.post('/api/blogs', async (req, res) => {
+    try {
+        const blog = await Blog.create(req.body)
+        console.log(blog.toJSON())
+        return res.json(blog)
+    }
+    catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
+})
+
+app.put('/api/blogs/:id', async (req, res) => {
+    try {
+        const blog = await Blog.findByPk(req.params.id)
+        if (blog) {
+            blog.author = req.body.author
+            blog.url = req.body.url
+            blog.title = req.body.title
+            blog.likes = req.body.likes
+            console.log(blog.toJSON())
+            await blog.save()
+            return res.json(blog)
+        }
+        else {
+            res.status(404).json({ error: 'Blog not found.' })
+        }
+    }
+    catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
+})
+
+app.delete('/api/blogs/:id', async(req, res) => {
+    try {
+        const blog = await Blog.findByPk(req.params.id)
+        if (blog) {
+            console.log('Deleting blog: ', blog.toJSON())
+            await blog.destroy()
+            res.status(200).json({ message: 'Blog deleted.' })
+        }
+        else {
+            res.status(404).json({ error: 'Blog not found.' })
+        }
+    }
+    catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal server error' })
     }
 })
 
