@@ -6,18 +6,18 @@ const blogFinder = async (req, res, next) => {
     next()
 }
 
-router.get('/', async(req, res) => {
+router.get('/', async(req, res, next) => {
     try {
         const blogs = await Blog.findAll()
         console.log(JSON.stringify(blogs), null, 2)
         return res.json(blogs)
 
     } catch(error) {
-        return res.status(500).json({ error: 'Internal server error.' })
+        next(error)
     }
 })
 
-router.get('/:id', blogFinder, async(req, res) => {
+router.get('/:id', blogFinder, async(req, res, next) => {
     try {
         if (req.blog) {
             return res.json(req.blog)
@@ -27,24 +27,22 @@ router.get('/:id', blogFinder, async(req, res) => {
         }
     }
     catch (error) {
-        console.error(error)
-        return res.status(500).json({ error: 'Internal server error.' })
+        next(error)
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     try {
         const blog = await Blog.create(req.body)
         console.log(blog.toJSON())
         return res.json(blog)
     }
     catch (error) {
-        console.error(error)
-        return res.status(500).json({ error: 'Internal server error' })
+        next(error)
     }
 })
 
-router.put('/:id', blogFinder, async (req, res) => {
+router.put('/:id', blogFinder, async (req, res, next) => {
     function updateBlog(blog) {
         blog.author = req.body.author
         blog.url = req.body.url
@@ -63,12 +61,11 @@ router.put('/:id', blogFinder, async (req, res) => {
         }
     }
     catch (error) {
-        console.error(error)
-        return res.status(500).json({ error: 'Internal server error' })
+        next(error)
     }
 })
 
-router.delete('/:id', blogFinder, async(req, res) => {
+router.delete('/:id', blogFinder, async(req, res, next) => {
     try {
         if (req.blog) {
             await req.blog.destroy()
@@ -79,8 +76,7 @@ router.delete('/:id', blogFinder, async(req, res) => {
         }
     }
     catch (error) {
-        console.error(error)
-        return res.status(500).json({ error: 'Internal server error' })
+        next(error)
     }
 })
 
