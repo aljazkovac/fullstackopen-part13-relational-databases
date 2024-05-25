@@ -4,11 +4,12 @@ const blogFinder = require('../middleware/blogFinder')
 
 router.get('/', async(req, res) => {
     const blogs = await Blog.findAll()
-    return res.status(200).json(blogs)
+    // This sets the status code to 200 by default and ends the request-response cycle.
+    return res.json(blogs)
 })
 
 router.get('/:id', blogFinder, async(req, res) => {
-    return req.blog ? res.status(200).json(req.blog) : res.status(404).json({ message: 'Blog not found.' });
+    return req.blog ? res.json(req.blog) : res.status(404).json({ message: 'Blog not found.' });
 })
 
 router.post('/', async (req, res) => {
@@ -27,7 +28,7 @@ router.put('/:id', blogFinder, async (req, res) => {
     if (req.blog) {
         updateBlog(req.blog);
         await req.blog.save()
-        return res.status(200).json(req.blog)
+        return res.json(req.blog)
     }
     else {
         return res.status(404).json({ error: 'Blog not found.' })
