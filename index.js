@@ -1,5 +1,5 @@
 const express = require('express')
-const errorHandler = require('middleware/errorHandler')
+const errorHandler = require('./middleware/errorHandler')
 const blogsRouter = require('./controllers/blogs')
 const { PORT } = require('./util/config')
 const { connectToDatabase } = require('./util/db')
