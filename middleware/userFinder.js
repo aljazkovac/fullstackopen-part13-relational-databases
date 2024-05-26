@@ -1,6 +1,10 @@
-const { User } = require('../models');
+const { User, Blog } = require('../models');
 const userFinder = async (req, res, next) => {
-    req.user = await User.findByPk(req.params.id)
+    req.user = await User.findByPk(req.params.id, {
+        include: {
+            model: Blog
+        }
+    })
     next()
 }
 
