@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Blog } = require('../models')
+const { Blog, User } = require('../models')
 const blogFinder = require('../middleware/blogFinder')
 
 router.get('/', async(req, res) => {
@@ -13,7 +13,8 @@ router.get('/:id', blogFinder, async(req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const blog = await Blog.create(req.body)
+    const user = await User.findOne()
+    const blog = await Blog.create({...req.body, userId: user.id})
     return res.status(201).json(blog)
 })
 

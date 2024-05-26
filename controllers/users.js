@@ -1,9 +1,13 @@
 const router = require('express').Router()
-const { User } = require('../models')
+const { User, Blog } = require('../models')
 const userFinder = require('../middleware/userFinder')
 
 router.get('/', async (req, res) => {
-    const users = await User.findAll()
+    const users = await User.findAll({
+        include: {
+            model: Blog
+        }
+    })
     // This sets the status code to 200 by default and ends the request-response cycle.
     return res.json(users)
 })
