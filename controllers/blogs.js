@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { Blog, User } = require('../models')
 const blogFinder = require('../middleware/blogFinder')
-
+const tokenExtractor = require('../middleware/tokenExtractor')
 router.get('/', async(req, res) => {
     const blogs = await Blog.findAll()
     // This sets the status code to 200 by default and ends the request-response cycle.
@@ -12,9 +12,9 @@ router.get('/:id', blogFinder, async(req, res) => {
     return req.blog ? res.json(req.blog) : res.status(404).json({ message: 'Blog not found.' });
 })
 
-router.post('/', async (req, res) => {
-    const user = await User.findOne()
-    const blog = await Blog.create({...req.body, userId: user.id})
+router.post('/', tokenExtractor, async (req, res) => {
+    const user = await User.findByPk(req.decodedToken.id)
+    const blog = await Blog.create({...req.body, userId: user.id, date: new Date()})
     return res.status(201).json(blog)
 })
 

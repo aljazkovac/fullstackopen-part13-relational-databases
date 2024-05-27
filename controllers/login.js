@@ -14,10 +14,12 @@ router.post('/', async (req, res) => {
     const passwordCorrect = body.password === 'secret'
     if (!(user && passwordCorrect)) {
         return res.status(401).json({
-            error: 'invalid username or password'
+            error: 'Invalid username or password'
         })
     }
 
+    // Determine the payload for the signing of the token 
+    // (this is the information that will be returned when you decode the token).
     const userForToken = {
         username: user.username,
         id: user.id,
@@ -25,7 +27,7 @@ router.post('/', async (req, res) => {
     const token = jwt.sign(userForToken, SECRET)
 
     // Default to status 200.
-    res.send({ token, username: user.username, name: user.name })
+    return res.send({ token, username: user.username, name: user.name })
 })
 
 module.exports = router
