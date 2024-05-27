@@ -3,7 +3,10 @@ const { Blog, User } = require('../models')
 const blogFinder = require('../middleware/blogFinder')
 const tokenExtractor = require('../middleware/tokenExtractor')
 router.get('/', async(req, res) => {
-    const blogs = await Blog.findAll()
+    const blogs = await Blog.findAll({ 
+        attributes: { exclude: ['userId'] },
+        include: { model: User, attributes: ['name']}
+    })
     // This sets the status code to 200 by default and ends the request-response cycle.
     return res.json(blogs)
 })

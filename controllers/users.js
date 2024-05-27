@@ -5,7 +5,8 @@ const userFinder = require('../middleware/userFinder')
 router.get('/', async (req, res) => {
     const users = await User.findAll({
         include: {
-            model: Blog
+            model: Blog,
+            attributes: { exclude: ['userId']}
         }
     })
     // This sets the status code to 200 by default and ends the request-response cycle.
