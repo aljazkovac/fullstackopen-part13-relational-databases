@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { User, Blog } = require('../models')
 const userFinder = require('../middleware/userFinder')
 const bcrypt = require('bcrypt')
+const tokenExtractor = require("../middleware/tokenExtractor");
 const saltRounds = 10
 
 router.get('/', async (req, res) => {
@@ -28,6 +29,23 @@ router.post('/', async (req, res) => {
     const passwordHash = await bcrypt.hash(password, saltRounds)
     const user = await User.create({ ...req.body, passwordHash: passwordHash })
     return res.status(201).json(user)
+})
+
+router.put('/:username', tokenExtractor, async(req, res) => {
+    function updateUsername(user) {
+        user.username = req.body.username
+    }
+    const user = await User.findOne({ where: { username: req.params.username }})
+    console.log('User : ', user)
+    
+    if (req.decodedToken) {
+        updateUsername(user)
+        await user.save()
+        return res.json(user)
+    }
+    else {
+        return res.status(404).json('User not found')
+    }
 })
 
 module.exports = router
