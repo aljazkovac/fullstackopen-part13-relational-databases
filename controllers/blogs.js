@@ -5,7 +5,7 @@ const tokenExtractor = require('../middleware/tokenExtractor')
 router.get('/', async(req, res) => {
     const blogs = await Blog.findAll({ 
         attributes: { exclude: ['userId'] },
-        include: { model: User, attributes: ['name']}
+        include: { model: User, attributes: ['username']}
     })
     // This sets the status code to 200 by default and ends the request-response cycle.
     return res.json(blogs)
@@ -39,8 +39,11 @@ router.put('/:id', blogFinder, async (req, res) => {
     }
 })
 
-router.delete('/:id', blogFinder, async(req, res) => {
+router.delete('/:id', tokenExtractor, blogFinder, async(req, res) => {
     if (req.blog) {
+        if (req.blog.user.username !== req.decodedToken.username) {
+            return res.status(403).json({ error: 'Permission denied!'})
+        }
         await req.blog.destroy()
         return res.status(204).end()
     }
