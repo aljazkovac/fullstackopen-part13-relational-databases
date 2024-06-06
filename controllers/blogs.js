@@ -2,10 +2,18 @@ const router = require('express').Router()
 const { Blog, User } = require('../models')
 const blogFinder = require('../middleware/blogFinder')
 const tokenExtractor = require('../middleware/tokenExtractor')
+const {Op} = require("sequelize");
 router.get('/', async(req, res) => {
+    // Filter blog titles only if there is a search condition in the query.
+    const where = {}
+    if (req.query.search) {
+        where.title = {
+            [Op.substring]: req.query.search
+        }
+    }
     const blogs = await Blog.findAll({ 
         attributes: { exclude: ['userId'] },
-        include: { model: User, attributes: ['username']}
+        include: { model: User, attributes: ['username']}, where
     })
     // This sets the status code to 200 by default and ends the request-response cycle.
     return res.json(blogs)
