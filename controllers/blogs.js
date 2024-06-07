@@ -14,7 +14,8 @@ router.get('/', async(req, res) => {
     }
     const blogs = await Blog.findAll({ 
         attributes: { exclude: ['userId'] },
-        include: { model: User, attributes: ['username']}, where
+        include: { model: User, attributes: ['username']}, where,
+        order: [['likes', 'DESC']] // NOTE: You need nested parentheses here.
     })
     // This sets the status code to 200 by default and ends the request-response cycle.
     return res.json(blogs)
