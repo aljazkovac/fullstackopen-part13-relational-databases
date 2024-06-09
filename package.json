@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "migration:down": "node util/rollback.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,7 @@
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.5",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "umzug": "^3.8.1"
   }
 }

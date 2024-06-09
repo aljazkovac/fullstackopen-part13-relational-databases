@@ -21,6 +21,12 @@ router.post('/', async (req, res) => {
             error: 'Invalid username or password'
         })
     }
+    
+    if (user.disabled) {
+        return res.status(401).json({
+            error: 'Account disabled, please contact admin.'
+        })
+    }
 
     // Determine the payload for the signing of the token 
     // (this is the information that will be returned when you decode the token).
