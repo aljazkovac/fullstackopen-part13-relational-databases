@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { User, Blog } = require('../models')
+const { User, Blog, ReadingList} = require('../models')
 const userFinder = require('../middleware/userFinder')
 const bcrypt = require('bcrypt')
 const tokenExtractor = require("../middleware/tokenExtractor");
@@ -8,10 +8,19 @@ const saltRounds = 10
 
 router.get('/', async (req, res) => {
     const users = await User.findAll({
-        include: {
-            model: Blog,
-            attributes: { exclude: ['userId']}
-        }
+        include: [
+            {
+                model: Blog,
+                attributes: { exclude: ['userId'] }
+            },
+            // {
+            //     model: ReadingList,
+            //     attributes: ['name', 'id'],
+            //     through: {
+            //         attributes: []
+            //     }
+            // }
+        ]
     })
     // This sets the status code to 200 by default and ends the request-response cycle.
     return res.json(users)

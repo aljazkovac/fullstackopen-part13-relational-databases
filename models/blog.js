@@ -36,6 +36,11 @@ Blog.init({
                }
             }
         }
+    },
+    read: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        default: false
     }
 }, {
     sequelize,

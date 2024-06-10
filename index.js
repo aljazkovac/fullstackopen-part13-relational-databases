@@ -7,6 +7,7 @@ const blogsRouter = require('./controllers/blogs')
 const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
 const authorsRouter = require('./controllers/authors')
+const readingListsRouter = require('./controllers/readingLists')
 const errorHandler = require('./middleware/errorHandler')
 
 const app = express()
@@ -15,6 +16,7 @@ app.use('/api/blogs', blogsRouter) // Middleware for route handling.
 app.use('/api/users', usersRouter) // Middleware for user handling.
 app.use('/api/login', loginRouter) // Middleware for login handling.
 app.use('/api/authors', authorsRouter) // Middleware for author handling.
+app.use('/api/readinglists', readingListsRouter) // Middleware for reading lists handling.
 app.use(errorHandler) // Middleware for error handling.
 
 const start = async () => {
