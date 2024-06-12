@@ -13,13 +13,16 @@ router.get('/', async (req, res) => {
                 model: Blog,
                 attributes: { exclude: ['userId'] }
             },
-            // {
-            //     model: ReadingList,
-            //     attributes: ['name', 'id'],
-            //     through: {
-            //         attributes: []
-            //     }
-            // }
+            {
+                model: ReadingList,
+                attributes: ['name', 'id'],
+                include: [
+                    {
+                        model: Blog,
+                        attributes: { exclude: ['userId'] }
+                    }
+                ]
+            }
         ]
     })
     // This sets the status code to 200 by default and ends the request-response cycle.
