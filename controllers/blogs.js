@@ -5,16 +5,16 @@ const tokenExtractor = require('../middleware/tokenExtractor')
 const {Op} = require("sequelize");
 router.get('/', async(req, res) => {
     // Filter blog titles only if there is a search condition in the query.
-    const where = {}
+    const searchWhere= {}
     if (req.query.search) {
-        where[Op.or] = [
+        searchWhere[Op.or] = [
             { title: { [Op.substring]: req.query.search} },
             { author: { [Op.substring]: req.query.search} }
         ]
     }
     const blogs = await Blog.findAll({ 
         attributes: { exclude: ['userId'] },
-        include: { model: User, attributes: ['username']}, where,
+        include: { model: User, attributes: ['username']}, where: searchWhere,
         order: [['likes', 'DESC']] // NOTE: You need nested parentheses here.
     })
     // This sets the status code to 200 by default and ends the request-response cycle.
