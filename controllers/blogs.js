@@ -38,6 +38,7 @@ router.put('/:id', blogFinder, async (req, res) => {
         blog.title = req.body.title
         blog.likes = req.body.likes
         blog.year = req.body.year
+        blog.read = req.body.read
     }
 
     if (req.blog) {

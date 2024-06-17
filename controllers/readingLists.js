@@ -49,33 +49,5 @@ router.post('/:id', tokenExtractor, async (req, res) => {
     const readingListMembership = await ReadingListMembership.create({...req.body, blogId: req.body.blogId, readingListId: readingList.id})
     return res.status(201).json(readingListMembership)
 })
-//
-// router.put('/:username', tokenExtractor, isAdmin, async(req, res) => {
-//     function updateUser(user) {
-//         if (req.body.username !== undefined) {
-//             user.username = req.body.username
-//         }
-//         if (req.body.disabled !== undefined) {
-//             user.disabled = req.body.disable
-//         }
-//         if (req.body.admin !== undefined) {
-//             user.admin = req.body.admin
-//         }
-//     }
-//     const user = await User.findOne({
-//         where:
-//             { username: req.params.username }
-//     })
-//
-//     if (!user) {
-//         return res.status(404).json('User not found.')
-//     }
-//
-//     console.log('User: ', user)
-//
-//     updateUser(user)
-//     await user.save()
-//     return res.json(user)
-// })
 
 module.exports = router
