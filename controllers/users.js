@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { User, Blog, ReadingList} = require('../models')
+const { User, Blog, ReadingList, Session} = require('../models')
 const userFinder = require('../middleware/userFinder')
 const bcrypt = require('bcrypt')
 const tokenExtractor = require("../middleware/tokenExtractor");
@@ -45,12 +45,19 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:username', tokenExtractor, isAdmin, async(req, res) => {
-    function updateUser(user) {
+    async function updateUser(user) {
         if (req.body.username !== undefined) {
             user.username = req.body.username
         }
         if (req.body.disabled !== undefined) {
-            user.disabled = req.body.disable
+            user.disabled = req.body.disabled
+            // When disabling a user, remove all the user's login sessions.
+            if (user.disabled === true) {
+                console.log('Removing all sessions of logged-in user with id: ', user.id)
+                await Session.destroy({ where: {
+                        user_id: user.id
+                    }})
+            }
         }
         if (req.body.admin !== undefined) {
             user.admin = req.body.admin
@@ -60,14 +67,15 @@ router.put('/:username', tokenExtractor, isAdmin, async(req, res) => {
         where: 
             { username: req.params.username }
     })
-
+    
+    
     if (!user) {
         return res.status(404).json('User not found.')
     }
     
     console.log('User: ', user)
     
-    updateUser(user)
+    await updateUser(user)
     await user.save()
     return res.json(user)
 })

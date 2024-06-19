@@ -27,10 +27,6 @@ router.get('/', async (req, res) => {
     return res.json(readingLists)
 })
 
-// router.get('/:id', userFinder, async (req, res) => {
-//     return req.user ? res.json(req.user) : res.status(404).json( { message: 'User not found.' })
-// })
-//
 router.post('/', tokenExtractor, async (req, res) => {
     const user = await User.findByPk(req.decodedToken.id)
     const readingList = await ReadingList.create({...req.body, userId: user.id})

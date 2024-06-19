@@ -27,7 +27,7 @@ router.get('/:id', blogFinder, async(req, res) => {
 
 router.post('/', tokenExtractor, async (req, res) => {
     const user = await User.findByPk(req.decodedToken.id)
-    const blog = await Blog.create({...req.body, userId: user.id, date: new Date()})
+    const blog = await Blog.create({...req.body, userId: user.id})
     return res.status(201).json(blog)
 })
 
