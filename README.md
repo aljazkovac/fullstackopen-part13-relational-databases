@@ -1,6 +1,6 @@
 # Full Stack Open - Relational databases
 
-Repo for the final part, [Part 13 - Relational databases]([url](https://fullstackopen.com/en/part13), of the course [Fullstack Open](https://fullstackopen.com/en/).
+Repo for the final part, [Part 13 - Relational databases](https://fullstackopen.com/en/part13), of the course [Fullstack Open](https://fullstackopen.com/en/).
 
 This part is all about PSQL, Sequelize and relational databases.
 
