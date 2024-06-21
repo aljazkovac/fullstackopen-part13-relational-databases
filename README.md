@@ -4,7 +4,7 @@ Repo for the final part, [Part 13 - Relational databases](https://fullstackopen.
 
 This part is all about PSQL, Sequelize and relational databases.
 
-Please check out the [main repo for the course](https://github.com/aljazkovac/fullstackopen-part0-to-part9-react) also.
+Please see also the [main repository for the course](https://github.com/alko5923/fullstack-open).
 
 Here is the certificate for this part:
 
